@@ -40,6 +40,18 @@ def get_users():
     
     return jsonify(result)  # Return the formatted result
 
+@app.route('/login/<user_id>/<password>', methods=['GET'])
+def login(user_id,password):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(f"SELECT * FROM public.user_detail where user_id='{user_id}' and password='{password}';")  # Assuming you have a 'user_detail' table
+    users = cur.fetchall()
+    
+    cur.close()
+    conn.close()
+    
+    return 'True' if users else 'False' , 200 # Return the formatted result
+
 @app.route('/check_user_id_exists', methods=['POST'])
 def check_user_id_exists():
     new_user = request.json
