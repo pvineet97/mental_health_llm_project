@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:13
+    container_name: mental_health_db_v5
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: admin1
+      POSTGRES_PASSWORD: u_pick_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    image: pvineet97/mental_health_llm_project:latest
+    container_name: mental_health_api_v3
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://admin1:u_pick_password@db:5432/postgres
+      FLASK_APP: app.py
+      FLASK_RUN_HOST: 0.0.0.0
+      FLASK_RUN_PORT: 5000
+      
+volumes:
+  pgdata:
